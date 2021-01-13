@@ -30,10 +30,20 @@ def start(letters, amount):
             page = urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3', 'Accept-Encoding': 'none', 'Accept-Language': 'en-US,en;q=0.8', 'Connection': 'keep-alive'}))
             soup = BeautifulSoup(page, features="html.parser")
 
-            x = soup.body.find('img', attrs={'id' : 'screenshot-image'})
+            imgCode = soup.body.find('img', attrs={'id' : 'screenshot-image'})
+            imgSrc = str(BeautifulSoup(str(imgCode), features="html.parser").img.attrs["src"])
 
-            print(x)
-            break
+            # check if this img exists - possible because of the diffrent starting of url
+            # starting with https = exists, else does not
+            if imgSrc.startswith("https"):
+                # this image exists, download it and continue
+                print(colors.OKGREEN + "Found image, downloading" + colors.ENDC)
+                urllib.request.urlretrieve(imgSrc, "Images/" + letters + str(i) +".png")
+                continue
+            else:
+                # does not exist :( continue
+                print(colors.WARNING + "Image not found, proceeding" + colors.ENDC)
+                continue
     else:
         # user typed incorrect amount num, die
         print(colors.FAIL + "You have typed wrong number of pictures to save, choose only from 1 to 1000")
