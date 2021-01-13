@@ -19,6 +19,10 @@ class colors:
 def start(letters, amount):
     if amount <= 10000 and amount >= 0:
         # check was successful
+        opener = urllib.request.build_opener()
+        opener.addheaders = [('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11'), ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'), ('Accept-Charset', 'ISO-8859-1,utf-8;q=0.7,*;q=0.3'), ('Accept-Encoding', 'none'), ('Accept-Language', 'en-US,en;q=0.8'), ('Connection', 'keep-alive')]
+        urllib.request.install_opener(opener)
+
         for iRaw in range(0, amount):
             # format the current code, such that it has four digits
             i = '{0:04}'.format(iRaw)
@@ -38,7 +42,7 @@ def start(letters, amount):
             if imgSrc.startswith("https"):
                 # this image exists, download it and continue
                 print(colors.OKGREEN + "Found image, downloading" + colors.ENDC)
-                urllib.request.urlretrieve(imgSrc, "Images/" + letters + str(i) +".png")
+                urllib.request.urlretrieve(imgSrc, letters + str(i) +".png")
                 continue
             else:
                 # does not exist :( continue
