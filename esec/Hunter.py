@@ -24,12 +24,10 @@ class Hunter:
     nextCode = 0
     downloading_threads = list()
 
-<<<<<<< HEAD
     def checks(self):
         # this method check for regexes and other checks that need to be done
+        return
 
-=======
->>>>>>> 95958f68e0f2b582820fb18b64dd2159f193ea3c
     def downloading_thread(self):
         while self.threads_run:
             if self.threads_pause:
