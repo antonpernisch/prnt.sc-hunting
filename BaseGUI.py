@@ -8,20 +8,48 @@ class GUIPanel(wx.Panel):
 
 
         # create StaticBox for attack pattern
-        self.attackPatternBox = wx.StaticBox(self, -1, "Attack Pattern")
+        self.attackPatternBox = wx.StaticBox(self, -1, "ATTACK PATTERN")
         self.attackPatternBox_sizer = wx.StaticBoxSizer(self.attackPatternBox, wx.VERTICAL)
 
         self.apbox_content_sizer = wx.BoxSizer(wx.VERTICAL)
 
         # insert objects into attack pattern box
-        self.text_ctrl = wx.TextCtrl(self, -1, style=wx.ALIGN_LEFT)
-        self.apbox_content_sizer.Add(self.text_ctrl, 0, wx.ALL | wx.LEFT, 10)
-        self.attackPatternBox_sizer.Add(self.apbox_content_sizer, 0, wx.ALL | wx.LEFT, 10)
+        self.choose_attackPattern_text = wx.StaticText(self, -1, "Choose attack pattern:")
+        self.attack_patterns = ["Two letters at the beggining, followed by 4 numbers", "Random 6-digit sequence"]
+        self.attackPattern = wx.ComboBox(self, choices=self.attack_patterns, style=wx.CB_READONLY)
+        self.attackPattern.SetSelection(0)
+        self.attackPattern.Bind(wx.EVT_COMBOBOX, self.update_pattern_example)
+
+        self.pattern_example_text__guide = wx.StaticText(self, -1, "Example of selected pattern:")
+        self.pattern_example_text__example = wx.StaticText(self, -1, label="https://prnt.sc/hw6372")
+
+        self.apbox_content_sizer.Add(self.choose_attackPattern_text, 0, wx.BOTTOM, border=5)
+        self.apbox_content_sizer.Add(self.attackPattern, 0, wx.ALL | wx.EXPAND)
+
+        self.apbox_content_sizer.Add(self.pattern_example_text__guide, 0, wx.TOP, border=15)
+        self.apbox_content_sizer.Add(self.pattern_example_text__example, 0, wx.TOP, border=5)
+
+        self.attackPatternBox_sizer.Add(self.apbox_content_sizer, 0, wx.ALL | wx.EXPAND, 10)
 
         # add objects to sizers
         self.main_sizer.Add(self.attackPatternBox_sizer, 0, wx.ALL | wx.EXPAND, 10)
 
+        # continue adding to attack options box
+        self.attackOptionsBox = wx.StaticBox(self, -1, "ATTACK OPTIONS")
+        self.attackOptionsBox_sizer = wx.StaticBoxSizer(self.attackOptionsBox, wx.VERTICAL)
+
+        self.aobox_content_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        self.main_sizer.Add(self.attackOptionsBox_sizer, 0, wx.ALL | wx.EXPAND, 10)
+
         self.SetSizer(self.main_sizer)
+
+    def update_pattern_example(self, event):
+        # too lazy to randomize it, maybe later lol
+        if self.attackPattern.GetSelection() == 0:
+            self.pattern_example_text__example.SetLabel("https://prnt.sc/hw6372")
+        elif self.attackPattern.GetSelection() == 1:
+            self.pattern_example_text__example.SetLabel("https://prnt.sc/7da52c")
         
 class GUIFrame(wx.Frame):
     def __init__(self):
@@ -50,13 +78,13 @@ class GUIFrame(wx.Frame):
 
 class AboutDialog(wx.Dialog):
     def __init__(self, parent):
-        super(AboutDialog, self).__init__(parent, title="About", size=(250,150))
+        super(AboutDialog, self).__init__(parent, title="About", size=(300,250))
         self.vsizer = wx.BoxSizer(wx.VERTICAL)
         self.hsizer = wx.BoxSizer(wx.HORIZONTAL)
         self.hsizer2 = wx.BoxSizer(wx.HORIZONTAL)
         panel = wx.Panel(self)
 
-        aboutText = wx.StaticText(panel, -1, "aa\ndd")
+        aboutText = wx.StaticText(panel, -1, "Screenshot hunting tool\nfor hunting personal information\nfrom prnt.sc service.\nCreated and developed by Anton Pernisch\n\n\n\nSoftware under GNU GPLv3 license.\n(c) Anton Pernisch 2021")
         self.about_btn = wx.Button(panel, wx.ID_CANCEL, label = "Cancel")
 
         self.hsizer.Add(self.about_btn, 0, wx.ALL|wx.EXPAND, 5)
