@@ -27,7 +27,7 @@ class GUIPanel(wx.Panel):
 
         # insert objects into attack pattern box
         self.choose_attackPattern_text = wx.StaticText(self, -1, "Choose attack pattern:")
-        self.attack_patterns = ["Two letters at the beggining, followed by 4 numbers", "Random 6-digit sequence"]
+        self.attack_patterns = ["Two letters at the beggining, followed by 4 numbers", "Random 6-character sequence"]
         ValuesBin.attackPattern = wx.ComboBox(self, choices=self.attack_patterns, style=wx.CB_READONLY)
         ValuesBin.attackPattern.SetSelection(0)
         ValuesBin.attackPattern.Bind(wx.EVT_COMBOBOX, self.update_pattern_example)
@@ -90,10 +90,10 @@ class GUIPanel(wx.Panel):
         # output
         sizer__output = wx.BoxSizer(wx.HORIZONTAL)
         self.textCtrl__output_title = wx.StaticText(self, -1, "Output:")
-        ValuesBin.textCtrl__output = wx.StaticText(self, -1, "Waiting for user...")
+        ValuesBin.textCtrl__output = wx.StaticText(self, -1, "Waiting for first run")
         ValuesBin.textCtrl__output.SetForegroundColour((100,100,100))
         sizer__output.Add(self.textCtrl__output_title, 0)
-        sizer__output.Add(ValuesBin.textCtrl__output, 0, wx.LEFT, 15)
+        sizer__output.Add(ValuesBin.textCtrl__output, 0, wx.LEFT, 12)
 
         self.main_sizer.Add(sizer__output, 0, wx.LEFT | wx.EXPAND, 10)
 
@@ -139,7 +139,7 @@ class GUIFrame(wx.Frame):
         help_menu = wx.Menu()
         file_menu = wx.Menu()
         about__help_menu_item = help_menu.Append(wx.ID_ANY, "About", "Show info about current build and author")
-        download_folder__file_menu_item = file_menu.Append(wx.ID_ANY, "Download folder", "Let's you choose download folder")
+        download_folder__file_menu_item = file_menu.Append(wx.ID_ANY, "Download Folder", "Let's you choose download folder")
         menu_bar.Append(file_menu, "&File")
         menu_bar.Append(help_menu, "&Help")
         self.Bind(event=wx.EVT_MENU, handler=self.on_about_open, source=about__help_menu_item)
@@ -152,7 +152,7 @@ class GUIFrame(wx.Frame):
     def on_download_folder_open(self, event):
         dlg = wx.DirDialog(self, "Choose where the downloaded screenshots will go:", style=wx.DD_DEFAULT_STYLE)
         if dlg.ShowModal() == wx.ID_OK:
-            self.download_folder_path = dlg.GetPath()
+            ValuesBin.download_folder_path = dlg.GetPath()
         dlg.Destroy()
 
 class AboutDialog(wx.Dialog):
@@ -176,6 +176,7 @@ class AboutDialog(wx.Dialog):
 
 class HunterBridge:
     def __init__(self):
+        run_flag = False
         from Hunter import Hunter
         ValuesBin.startBtn.Enable(False)
         ValuesBin.textCtrl__output.SetLabel("Sending values to Hunter, expecting response...")
@@ -185,7 +186,16 @@ class HunterBridge:
         Hunter.letters = ValuesBin.textCtrl__letters.GetValue()
         Hunter.startingNum = ValuesBin.spinCtrl__startNum.GetValue()
         Hunter.amount = ValuesBin.spinCtrl__amount.GetValue()
-        Hunter.startup(Hunter)
+        try:
+            Hunter.downloadPath = ValuesBin.download_folder_path
+            run_flag = True
+        except AttributeError:
+            ValuesBin.textCtrl__output.SetLabel("You didn't select the download folder, select it in File menu")
+            ValuesBin.textCtrl__output.SetForegroundColour((255, 51, 0))
+            ValuesBin.progressBar.SetValue(0)
+            ValuesBin.startBtn.Enable(True)
+        if run_flag:
+            Hunter.startup(Hunter, ValuesBin)
 
 if __name__ == "__main__":
     app = wx.App(False)
