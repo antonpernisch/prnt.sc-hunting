@@ -5,6 +5,7 @@ import time
 import re
 from colorama import init, Fore, Style
 init(convert=True, autoreset=True)
+from BaseGUI import ValuesBin
 
 class Hunter:
 
@@ -120,23 +121,20 @@ class Hunter:
         self.downloading_threads = list()
         self.threads_num = 6
 
-        self.letters = input("> Write two letters at the beggining: ")
         try:
-            self.startingNum = int(input("> From where do you want to start? "))
+            self.startingNum = int(self.startingNum)
         except ValueError:
-            print(Fore.RED +  "(!) You have typed wrong value, please type only numbers")
-            self.startup(self)
+            ValuesBin.textCtrl__output.SetLabel("Invalid value for \"Start from\"")
+            ValuesBin.textCtrl__output.SetForegroundColour((255, 51, 0))
+            return
 
         try:
-            self.amount = int(input("> How many pictures do you want to save? "))
+            self.amount = int(self.amount)
         except ValueError:
-            print(Fore.RED +  "(!) You have typed wrong number of pictures to save, choose only from 1 to 1000")
-            self.startup(self)
+            ValuesBin.textCtrl__output.SetLabel("Invalid value for \"Download amount\"")
+            ValuesBin.textCtrl__output.SetForegroundColour((255, 51, 0))
+            return
 
-        self.start(self)
-
-print("")
-print(Style.BRIGHT + "PRNT.SC SCREENSHOT HUNTING TOOL")
-print("")
-
-Hunter.startup(Hunter)
+        ValuesBin.textCtrl__output.SetLabel("[HUNTER] Values imported, preparing download")
+        ValuesBin.textCtrl__output.SetForegroundColour((0, 153, 204))
+        #self.start(self)
