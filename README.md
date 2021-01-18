@@ -1,2 +1,2 @@
 # prnt.sc-hunting
-Automatic script that can be used to hunt personal information uploaded to prnt.sc service.
+Windows application for downloading screenshots from prnt.sc service
