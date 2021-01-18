@@ -107,6 +107,16 @@ class Hunter:
                     self.valuesbin.textCtrl__output.SetLabel("[Hunter] Image with code " + urlCode + " wasn't found, proceeding")
                     self.valuesbin.textCtrl__output.SetForegroundColour((255, 153, 0))
                     self.valuesbin.progressBar.SetValue(currentCode - self.startingNum + 1)
+                    if currentCode == self.amount + self.startingNum - 1:
+                        self.threads_run = False
+                        self.valuesbin.textCtrl__output.SetLabel("[Hunter] Done, waiting for threads to end their job...")
+                        self.valuesbin.textCtrl__output.SetForegroundColour((0, 153, 204))
+                        self.writePermission = False
+                        time.sleep(2.5)
+                        self.valuesbin.textCtrl__output.SetLabel("Downloading complete")
+                        self.valuesbin.textCtrl__output.SetForegroundColour((0, 153, 51))
+                        self.valuesbin.progressBar.SetValue(0)
+                        self.valuesbin.startBtn.Enable(True)
                     continue
 
     # main loop function
